@@ -1,0 +1,53 @@
+name: Create PySide6 exe with Nuitka-Action
+
+on:
+  push:
+    branches: [ master ]
+
+jobs:
+  build:
+    strategy:
+      matrix:
+        os: [ubuntu-latest] # [ubuntu-latest, windows-latest]
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          #cache: 'pip'
+          #cache-dependency-path: |
+          #  **/requirements*.txt
+
+      - name: Install Dependencies / BUild
+        run: |
+          pip install -r requirements.txt
+          pip install nuitka
+          python -m nuitka --onefile --show-scons --assume-yes-for-downloads --output-dir=build --enable-plugin=pyside6 --include-data-dir=images=images main.py
+
+      #- name: Build Executable
+      #  uses: Erriez/Nuitka-Action@main
+      #  with:
+      #    nuitka-version: main
+      #    script-name: main.py
+      #    standalone: false
+      #    onefile: true
+      #    enable-plugins: pyside6
+      #    enable-console: false
+      #    #include-data-dir: images=images
+
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ runner.os }} Build
+          path: |
+            build/*.exe
+            build/*.bin
+            build/*.app/**/*
+
