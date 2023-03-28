@@ -27,9 +27,13 @@ jobs:
 
       - name: Install Dependencies / BUild
         run: |
-          sudo apt install lsb-release
           lsb_release -a
 
+          sudo apt install python3-virtualenv
+          virtualenv venv
+          . venv/bin/activate
+          which python
+          python --version
           pip install -r requirements.txt
           pip install nuitka
           python -m nuitka --report=build/output.xml --onefile --assume-yes-for-downloads --output-dir=build --enable-plugin=pyside6 --include-data-dir=images=images main.py
