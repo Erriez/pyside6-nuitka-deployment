@@ -29,6 +29,15 @@ from PySide6.QtGui import QAction, QIcon
 import os
 import sys
 
+# When packaged to a single file with PyInstaller, running the .exe will unpack
+# everything to a folder in your TEMP directory, run the script, then discard
+# the temporary files. The path of the temporary folder changes with each
+# running, but a reference to its location is added to sys as sys._MEIPASS.
+try:
+    os.chdir(sys._MEIPASS)
+    print('Using ' + sys._MEIPASS)
+except:
+    pass
 
 class Window(QMainWindow):
     def __init__(self):
