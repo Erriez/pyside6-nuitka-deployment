@@ -21,7 +21,7 @@ jobs:
         with:
           python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-          #cache: 'pip'
+          cache: 'pip'
           #cache-dependency-path: |
           #  **/requirements*.txt
 
@@ -53,15 +53,18 @@ jobs:
           # pip install pyinstaller
           # pyinstaller --onefile --hidden-import PySide6 --add-data "images:images" --workpath /tmp/pyinstaller --distpath dist --name pyside6-gui --clean main.py
           
-          git clone https://github.com/Nuitka/Nuitka.git
-          cd Nuitka
-          git checkout develop
-          python3 -m nuitka --version
+          sudo apt update
+          sudo apt install patchelf
           
-          pip install pyside6
+          pip install -r requirements.txt
+
+          pip install git+https://github.com/Nuitka/Nuitka.git@7620fc963819c45691f13614a7fb9d23a3c03dbc#egg=Nuitka
+
+          python3 -m nuitka --version
 
           mkdir build
           python3 -m nuitka \
+                --experimental=no-outside-dependencies \
                 --report=build/output.xml \
                 --report-diffable \
                 --show-modules \
@@ -70,9 +73,8 @@ jobs:
                 --assume-yes-for-downloads \
                 --output-dir=build \
                 --enable-plugin=pyside6 \
-                --include-data-dir=/home/runner/work/pyside6-nuitka-test/pyside6-nuitka-test/images=images \
-                /home/runner/work/pyside6-nuitka-test/pyside6-nuitka-test/main.py
-
+                --include-data-dir=images=images \
+                main.py
 
       #- name: Build Executable
       #  uses: Erriez/Nuitka-Action@main
