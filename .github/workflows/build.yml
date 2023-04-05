@@ -32,10 +32,15 @@ jobs:
       - name: Install Dependencies / Build
         run: |
           lsb_release -a
+          
+          sudo apt update
+          sudo apt install patchelf
+          sudo apt install python3-virtualenv
 
-          # sudo apt install python3-virtualenv
-          # virtualenv venv
-          # . venv/bin/activate
+          virtualenv venv
+          source venv/bin/activate
+          
+          pip install -r requirements.txt
           
           # which python
           # python --version
@@ -52,29 +57,27 @@ jobs:
           # Pyinstaller test
           # pip install pyinstaller
           # pyinstaller --onefile --hidden-import PySide6 --add-data "images:images" --workpath /tmp/pyinstaller --distpath dist --name pyside6-gui --clean main.py
+
+          # pip install git+https://github.com/Nuitka/Nuitka.git@7620fc963819c45691f13614a7fb9d23a3c03dbc#egg=Nuitka
+
+          # python3 -m nuitka --version
+
+          # mkdir build
+          # python3 -m nuitka \
+          #      --experimental=no-outside-dependencies \
+          #       --report=build/output.xml \
+          #      --report-diffable \
+          #      --show-modules \
+          #      --show-modules-output=build/modules.txt \
+          #      --onefile \
+          #      --assume-yes-for-downloads \
+          #      --output-dir=build \
+          #      --enable-plugin=pyside6 \
+          #      --include-data-dir=images=images \
+          #      main.py
           
-          sudo apt update
-          sudo apt install patchelf
-          
-          pip install -r requirements.txt
-
-          pip install git+https://github.com/Nuitka/Nuitka.git@7620fc963819c45691f13614a7fb9d23a3c03dbc#egg=Nuitka
-
-          python3 -m nuitka --version
-
-          mkdir build
-          python3 -m nuitka \
-                --experimental=no-outside-dependencies \
-                --report=build/output.xml \
-                --report-diffable \
-                --show-modules \
-                --show-modules-output=build/modules.txt \
-                --onefile \
-                --assume-yes-for-downloads \
-                --output-dir=build \
-                --enable-plugin=pyside6 \
-                --include-data-dir=images=images \
-                main.py
+          # Another test
+          pyside6-deploy -c pysidedeploy.spec
 
       #- name: Build Executable
       #  uses: Erriez/Nuitka-Action@main
@@ -92,11 +95,12 @@ jobs:
         with:
           name: ${{ runner.os }} Build
           path: |
-            build/*.exe
-            build/*.bin
-            build/*.app/**/*
-            build/output.xml
-            build/modules.txt
-            #dist/*
+            # build/*.exe
+            # build/*.bin
+            # build/*.app/**/*
+            # build/output.xml
+            # build/modules.txt
+            # dist/*
+            main
 
 
