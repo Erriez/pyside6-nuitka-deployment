@@ -22,98 +22,48 @@ jobs:
           python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
           architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
           cache: 'pip'
-          #cache-dependency-path: |
-          #  **/requirements*.txt
 
-      #- name: Install prereqs
-      #  run: |
-      #    sudo apt install -y libegl-dev libxcb-keysyms1 libxcb-randr0 libxkbcommon-x11-0 libxcb-icccm4 libxcb-image0 libxcb-shape0 libxcb-xkb1 libxcb-render-util0
-
-      - name: Install Dependencies / Build
+      - name: Install system dependencies
         run: |
-          lsb_release -a
-          
+          # APT update
           sudo apt update
-          
-          # https://doc.qt.io/qtforpython/tutorials/debugging/mixed_debugging.html
+
+          # Install Pyside6 system dependencies
           sudo apt install -y \
             libfontconfig1-dev libfreetype6-dev \
             libx11-dev libx11-xcb-dev libxext-dev libxfixes-dev \
             libxi-dev libxrender-dev \
             libxkbcommon-dev libxkbcommon-x11-dev libatspi2.0-dev \
-            libopengl0 '^libxcb.*-dev'
-          
-          # Nuitka dependencies
+            libopengl0 '^libxcb.*-dev' \
+            libgl1 libegl1 libdbus-glib-1-2
+
+          # Install Nuitka dependencies
           sudo apt install -y \
             ccache \
             clang \
-            patchelf \
-          python3-virtualenv
+            patchelf
+            
+          # Build dependencies
+          sudo apt install -y \
+            python3-virtualenv
 
+      - name: Install Dependencies / Build
+        run: |
+          # Create virtual environment
           virtualenv venv
           source venv/bin/activate
-          
+
+          # Install project requirements
           pip install -r requirements.txt
-          
-          # which python
-          # python --version
-          
-          # pip3 install -U pip setuptools wheel certifi
-          # pip3 install -r requirements.txt
-          # pip3 install py2app
-          # PYINSTALLER_COMPILE_BOOTLOADER=1 MACOSX_DEPLOYMENT_TARGET=10.9 pip3 install https://github.com/pyinstaller/pyinstaller/tarball/develop --no-binary :all:
 
-          # Nuitka test
-          # pip install nuitka
-          # python -m nuitka --report=build/output.xml --onefile --assume-yes-for-downloads --output-dir=build --enable-plugin=pyside6 --include-data-dir=images=images main.py
-
-          # Pyinstaller test
-          # pip install pyinstaller
-          # pyinstaller --onefile --hidden-import PySide6 --add-data "images:images" --workpath /tmp/pyinstaller --distpath dist --name pyside6-gui --clean main.py
-
-          # pip install git+https://github.com/Nuitka/Nuitka.git@7620fc963819c45691f13614a7fb9d23a3c03dbc#egg=Nuitka
-
-          # python3 -m nuitka --version
-
-          # mkdir build
-          # python3 -m nuitka \
-          #      --experimental=no-outside-dependencies \
-          #       --report=build/output.xml \
-          #      --report-diffable \
-          #      --show-modules \
-          #      --show-modules-output=build/modules.txt \
-          #      --onefile \
-          #      --assume-yes-for-downloads \
-          #      --output-dir=build \
-          #      --enable-plugin=pyside6 \
-          #      --include-data-dir=images=images \
-          #      main.py
-          
-          # Another test
+          # Create executables
           pyside6-deploy -c pysidedeploy.spec
-
-      #- name: Build Executable
-      #  uses: Erriez/Nuitka-Action@main
-      #  with:
-      #    nuitka-version: main
-      #    script-name: main.py
-      #    standalone: false
-      #    onefile: true
-      #    enable-plugins: pyside6
-      #    enable-console: false
-      #    #include-data-dir: images=images
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }} Build
           path: |
-            # build/*.exe
-            # build/*.bin
-            # build/*.app/**/*
-            # build/output.xml
-            # build/modules.txt
-            # dist/*
             main
-
+            main.exe
 
