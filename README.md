@@ -1,7 +1,8 @@
 # Pyside6 Deployment Test
 
 This is a Pyside6 test project using Nuitka build for Windows and linux with
-Github Actions.
+Github Actions. Other operating systems are not supported by the developer of
+this repository.
 
 ![Pyside6 app screenshot](screenshots/app-screenshot.png)
 
@@ -17,11 +18,11 @@ a build and download `Linux Build` or `Windows Build` under `Artifacts`.
 
 ```bash
 # Clone project
-$ git clone https://github.com/Erriez/pyside6-nuitka-test.git
-$ cd pyside6-nuitka-test
+$ git clone https://github.com/Erriez/pyside6-nuitka-deployment.git
+$ cd pyside6-nuitka-deployment
 
 # Install Linux system dependencies
-$ sudo apt install ccache clang patchelf
+$ sudo apt install python3-virtualenv ccache clang patchelf
 
 # Create virtual environment
 $ virtualenv venv
@@ -57,5 +58,8 @@ $ python3 -m nuitka \
     --disable-console=true \
     --windows-icon-from-ico=images/app.ico \
     main.py
+
+# Start created executable
+> .\pyside6-app.exe
 ```
 

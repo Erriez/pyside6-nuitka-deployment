@@ -56,14 +56,18 @@ class Window(QMainWindow):
     def __init__(self):
         super().__init__()
 
+        # Resize window
         self.resize(400, 300)
+        # Set window title
         self.setWindowTitle('File dialog')
-        
-        self.setWindowIcon(QIcon(resource_path(r'images/web.png')))
+        # Set window icon
+        self.setWindowIcon(QIcon(resource_path(r'images/app.png')))
 
+        # Create textbox
         self.textEdit = QTextEdit()
         self.setCentralWidget(self.textEdit)
 
+        # Create menubar
         file_open = QAction(QIcon(resource_path(r'images/open.png')), 'Open', self)
         file_open.setShortcut('Ctrl+O')
         file_open.setStatusTip('Open new File')
@@ -85,6 +89,7 @@ class Window(QMainWindow):
         self.toolbar.addAction(file_open)
         self.toolbar.addAction(file_exit)
 
+        # Create statusbar
         self.statusBar().showMessage('Click File | Open to read a file')
 
     def show_dialog(self):
