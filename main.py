@@ -33,11 +33,24 @@ import sys
 # everything to a folder in your TEMP directory, run the script, then discard
 # the temporary files. The path of the temporary folder changes with each
 # running, but a reference to its location is added to sys as sys._MEIPASS.
-try:
-    os.chdir(sys._MEIPASS)
-    print('Using ' + sys._MEIPASS)
-except:
-    pass
+# try:
+#    os.chdir(sys._MEIPASS)
+#    print('Using ' + sys._MEIPASS)
+#except:
+#    pass
+
+
+# Find images with Nuitka build option "--include-data-dir=images=images"
+def resource_path(filename):
+    # Get the absolute path of the directory containing the executable
+    exe_dir = os.path.dirname(os.path.abspath(__file__))
+
+    # Construct the path to the image file
+    image_path = os.path.join(exe_dir, filename)
+
+    # Return the image path
+    return image_path
+
 
 class Window(QMainWindow):
     def __init__(self):
@@ -46,17 +59,17 @@ class Window(QMainWindow):
         self.resize(400, 300)
         self.setWindowTitle('File dialog')
         
-        self.setWindowIcon(QIcon('images/web.png'))
+        self.setWindowIcon(QIcon(resource_path(r'images/web.png')))
 
         self.textEdit = QTextEdit()
         self.setCentralWidget(self.textEdit)
 
-        file_open = QAction(QIcon('images/open.png'), 'Open', self)
+        file_open = QAction(QIcon(resource_path(r'images/open.png')), 'Open', self)
         file_open.setShortcut('Ctrl+O')
         file_open.setStatusTip('Open new File')
         file_open.triggered.connect(self.show_dialog)
 
-        file_exit = QAction(QIcon('images/exit.png'), '&Exit', self)
+        file_exit = QAction(QIcon(resource_path(r'images/exit.png')), '&Exit', self)
         file_exit.setShortcut('Ctrl+Q')
         file_exit.setStatusTip('Exit application')
         file_exit.triggered.connect(self.close)
@@ -101,3 +114,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
