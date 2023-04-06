@@ -1,3 +1,8 @@
+[![Create PySide6 exe with Nuitka-Action](https://github.com/Erriez/pyside6-nuitka-deployment/actions/workflows/build.yml/badge.svg)](https://github.com/Erriez/pyside6-nuitka-deployment/actions/workflows/build.yml)
+[![Licence MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Erriez/pyside6-nuitka-deployment/blob/master/LICENSE)
+[![Pyside6](https://img.shields.io/badge/pyside6-v6.5.0-informational)](https://github.com/Erriez/pyside6-nuitka-deployment)
+[![Open issue](https://shields.io/github/issues-raw/Erriez/pyside6-nuitka-deployment)](https://github.com/Erriez/pyside6-nuitka-deployment/issues)
+
 # Pyside6 Deployment Test
 
 This is a Pyside6 test project using Nuitka build for Windows and linux with
