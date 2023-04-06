@@ -51,10 +51,9 @@ jobs:
         if: runner.os == 'Linux'
         uses: Nuitka/Nuitka-Action@main
         with:
-          nuitka-version: main
+          script-name: main.py
           output-file: pyside6-app
           include-data-dir: images=images
-          script-name: main.py
           standalone: true
           onefile: true
           enable-plugins: pyside6
@@ -63,10 +62,9 @@ jobs:
         if: runner.os == 'Windows'
         uses: Nuitka/Nuitka-Action@main
         with:
-          nuitka-version: main
+          script-name: main.py
           output-file: pyside6-app.exe
           include-data-dir: images=images
-          script-name: main.py
           standalone: true
           onefile: true
           disable-console: true
