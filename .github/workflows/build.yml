@@ -8,7 +8,7 @@ jobs:
   build:
     strategy:
       matrix:
-        os: [ubuntu-latest] # [ubuntu-latest, windows-latest]
+        os: [ubuntu-latest, windows-latest]
 
     runs-on: ${{ matrix.os }}
 
@@ -16,14 +16,8 @@ jobs:
       - name: Check-out repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
-          cache: 'pip'
-
-      - name: Install system dependencies
+      - name: Install Linux system dependencies
+        if: runner.os == 'Linux'
         run: |
           # APT update
           sudo apt update
@@ -38,32 +32,52 @@ jobs:
             libgl1 libegl1 libdbus-glib-1-2
 
           # Install Nuitka dependencies
-          sudo apt install -y \
-            ccache \
-            clang \
-            patchelf
-            
-          # Build dependencies
-          sudo apt install -y \
-            python3-virtualenv
+          sudo apt install -y ccache clang patchelf
 
-      - name: Install Dependencies / Build
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
+
+      - name: Install Dependencies
         run: |
-          # Create virtual environment
-          virtualenv venv
-          source venv/bin/activate
-
-          # Install project requirements
           pip install -r requirements.txt
 
-          # Create executables
-          pyside6-deploy -c pysidedeploy.spec
+      - name: Build Executable Linux
+        if: runner.os == 'Linux'
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          output-file: pyside6-app
+          include-data-dir: images=images
+          script-name: main.py
+          standalone: true
+          onefile: true
+          enable-plugins: pyside6
+
+      - name: Build Executable Windows
+        if: runner.os == 'Windows'
+        uses: Nuitka/Nuitka-Action@main
+        with:
+          nuitka-version: main
+          output-file: pyside6-app.exe
+          include-data-dir: images=images
+          script-name: main.py
+          standalone: true
+          onefile: true
+          disable-console: true
+          windows-icon-from-ico: images/app.ico
+          enable-plugins: pyside6
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }} Build
           path: |
-            main
-            main.exe
+            build/pyside6-app
+            build/pyside6-app.exe
 
