@@ -33,11 +33,11 @@ import sys
 # everything to a folder in your TEMP directory, run the script, then discard
 # the temporary files. The path of the temporary folder changes with each
 # running, but a reference to its location is added to sys as sys._MEIPASS.
-# try:
-#    os.chdir(sys._MEIPASS)
-#    print('Using ' + sys._MEIPASS)
-#except:
-#    pass
+try:
+    os.chdir(sys._MEIPASS)
+    print('Using ' + sys._MEIPASS)
+except:
+    pass
 
 
 # Find images with Nuitka build option "--include-data-dir=images=images"
@@ -83,7 +83,7 @@ class Window(QMainWindow):
         menu_file.addAction(file_open)
         menu_file.addSeparator()
         menu_file.addAction(file_exit)
-        
+
         # Create toolbar with Exit button
         self.toolbar = self.addToolBar('Exit')
         self.toolbar.addAction(file_open)
@@ -119,4 +119,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-

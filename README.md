@@ -5,21 +5,21 @@
 
 # Pyside6 Deployment Test
 
-This is a Pyside6 test project using Nuitka build for Windows and linux with
+This is a Pyside6 example project using Nuitka build for Windows and linux with
 Github Actions. Other operating systems are not supported by the developer of
 this repository.
 
 ![Pyside6 app screenshot](screenshots/app-screenshot.png)
 
 Qt recommends [Nuitka](https://doc.qt.io/qtforpython-6/deployment/deployment-nuitka.html) 
-to create Pyside6 executables for Windows and Linux.
+or [Pyinstaller](https://pyinstaller.org/en/stable/) to create Pyside6 executables for Windows and Linux.
 
 ## Download executables from Github Actions
 
 Visit [Actions](https://github.com/Erriez/pyside6-nuitka-test/actions), open
 a build and download `Linux Build` or `Windows Build` under `Artifacts`.
 
-## Build executable
+## Build executable manually
 
 ```bash
 # Clone project
@@ -36,12 +36,12 @@ $ pip install -r requirements.txt
 $ pip install nuitka
 ```
 
-## Build executable on Ubuntu/Mint 22.04/22.10 Desktop
+## Build executable on Ubuntu/Mint 22.04/22.10 Desktop manually
 
 ```bash
 # Build executable for Linux
 $ python3 -m nuitka \
-    --output-dir=output \
+    --output-dir=dist \
     --output-file=pyside6-app \
     --onefile \
     --enable-plugin=pyside6 \
@@ -52,24 +52,74 @@ $ python3 -m nuitka \
 $ ./pyside6-app
 ```
 
-## Build executable on Windows 10/11 Desktop
+## Build executable on Windows 10/11 Desktop manually
 
 ```
+# Fix virtualenv issues
+> Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy Unrestricted
+
 # Build executable for Windows
-$ python3 -m nuitka \
-    --output-dir=output \
-    --output-file=pyside6-app.exe \
-    --onefile \
-    --enable-plugin=pyside6 \
-    --include-data-dir=images=images \
-    --disable-console=true \
-    --windows-icon-from-ico=images/app.ico \
+> python -m nuitka `
+    --output-dir=dist `
+    --output-file=pyside6-app.exe `
+    --onefile `
+    --assume-yes-for-downloads `
+    --enable-plugin=pyside6 `
+    --include-data-dir=images=images `
+    --disable-console `
+    --windows-icon-from-ico=images/app.ico `
+    --company-name="Erriez Open Source Software" `
+    --product-name="PySide6 App" `
+    --file-version="1.0.0.0" `
+    --product-version="`1.0.0.0" `
+    --file-description="PySide6 Example App" `
+    --copyright="MIT (c) 2023 by Erriez" `
     main.py
 
 # Start created executable
-> .\pyside6-app.exe
+> dist\pyside6-app.exe
 ```
 
+## Build Windows executable with pyinstaller manually
+```
+# https://pypi.org/project/pyinstaller-versionfile/
+> pip install pyinstaller pyinstaller-versionfile
+> create-version-file --outfile version_info.txt version_info.yaml
+> pyinstaller `
+    --distpath dist `
+    --name pyside6-app-pyinstaller.exe `
+    --noconfirm `
+    --onefile `
+    --noconsole `
+    --ico images\app.ico `
+    --add-data "images;images" `
+    --version-file version_info.txt `
+    main.py
+```
+
+## Build Windows MSI manually
+```
+# Install choco and go-msi from PowerShell (Admin)
+> Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
+> choco install -y "go-msi"
+
+> Download and install Wix Toolset from: https://wixtoolset.org/docs/wix3/
+> Enable Windows feature .NET 3.5: https://github.com/wixtoolset/issues/issues/6824
+> $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
+
+> Set path executable in `wix.json` as the `bin/*.exe` is hard-coded in AliceOh_CreateWindowsInstaller:
+https://github.com/actions-marketplace-validations/AliceOh_CreateWindowsInstaller/blob/4b2465d50f69dc6376ac9c9081750957b1ecbbec/index.js#L31
+
+> go-msi check-json
+> go-msi set-guid
+> go-msi make --msi dist\pyside6-app.msi --version 1.0.0
+```
+
+## False positives virusscanners
+
+Windows Defender and virusscanners such as https://www.virustotal.com/ shows
+false positives when building executable with Pyinstaller or Nuitka. This is a
+known issue.
 
 ## MIT License
 
