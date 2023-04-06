@@ -59,7 +59,7 @@ class Window(QMainWindow):
         # Resize window
         self.resize(400, 300)
         # Set window title
-        self.setWindowTitle('File dialog')
+        self.setWindowTitle('Pyside6 App')
         # Set window icon
         self.setWindowIcon(QIcon(resource_path(r'images/app.png')))
 
