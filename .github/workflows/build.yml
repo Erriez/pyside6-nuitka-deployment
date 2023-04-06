@@ -3,21 +3,21 @@ name: Create PySide6 executables with Nuitka-Action
 on:
   push:
     branches: [ master ]
+    tags:
+      - "v*"
+  pull_request:
+     branches:
+      - master
 
 jobs:
-  build:
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
-
-    runs-on: ${{ matrix.os }}
+  build-linux:
+    runs-on: ubuntu-latest
 
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
 
       - name: Install Linux system dependencies
-        if: runner.os == 'Linux'
         run: |
           # APT update
           sudo apt update
@@ -50,26 +50,54 @@ jobs:
           cache-dependency-path: |
             **/requirements*.txt
 
-      - name: Install Dependencies
+      - name: Setup virtualenv
         run: |
           pip install -r requirements.txt
 
-      - name: Build Executable Linux
+      - name: Build Linux executable
         if: runner.os == 'Linux'
         uses: Nuitka/Nuitka-Action@main
         with:
           script-name: main.py
+          output-dir: dist
           output-file: pyside6-app
           include-data-dir: images=images
           standalone: true
           onefile: true
           enable-plugins: pyside6
+      
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: Linux Build
+          if-no-files-found: error
+          path: dist/pyside6-app
 
-      - name: Build Executable Windows
-        if: runner.os == 'Windows'
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
+          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          cache: 'pip'
+          cache-dependency-path: |
+            **/requirements*.txt
+
+      - name: Setup virtualenv
+        run: |
+          pip install -r requirements.txt
+
+      - name: Build Windows executable
         uses: Nuitka/Nuitka-Action@main
         with:
           script-name: main.py
+          output-dir: dist
           output-file: pyside6-app.exe
           include-data-dir: images=images
           standalone: true
@@ -78,16 +106,32 @@ jobs:
           windows-icon-from-ico: images/app.ico
           enable-plugins: pyside6
 
+      - name: Install Windows go-msi
+        run: |
+          choco install -y "go-msi"
+          mkdir application
+          cp dist/pyside6-app.exe application/
+
+      - name: Build Windows MSI installer
+        uses: AliceOh/CreateWindowsInstaller@1.0.0
+        with:
+          exefile: 'pyside6-app.exe'
+
+      - name: Move Windows MSI
+        run: |
+          mv pyside6-app.exe.msi dist/pyside6-app.msi
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
-          name: ${{ runner.os }} Build
+          name: Windows Build
+          if-no-files-found: error
           path: |
-            build/pyside6-app
-            build/pyside6-app.exe
+            dist/pyside6-app.exe
+            dist/pyside6-app.msi
 
   release:
-    needs: build
+    needs: [build-linux, build-windows]
     runs-on: ubuntu-latest
     if: contains(github.ref, '/tags/v')
     steps:
@@ -108,4 +152,5 @@ jobs:
             LICENSE
             ${{ github.workspace }}/artifacts/Linux Build/pyside6-app
             ${{ github.workspace }}/artifacts/Windows Build/pyside6-app.exe
+            ${{ github.workspace }}/artifacts/Windows Build/pyside6-app.msi
 

@@ -1,0 +1,44 @@
+{
+  "product": "Erriez Pyside6 Example",
+  "company": "Erriez Open Source Software",
+  "license": "LICENSE",
+  "upgrade-code": "79c7f072-f4c0-4323-8eb9-b6220828a276",
+  "files": {
+    "guid": "d6c3e597-6159-47ee-88b1-aca94db29288",
+    "items": [
+      "bin/pyside6-app.exe"
+    ]
+  },
+  "env": {
+    "guid": "2d3714f4-9e3e-4c71-91cb-bbae4b0c7b09",
+    "vars": [
+      {
+        "name": "PATH",
+        "value": "[INSTALLDIR]",
+        "permanent": "no",
+        "system": "no",
+        "action": "set",
+        "part": "last"
+      }
+    ]
+  },
+  "shortcuts": {
+    "guid": "bcce1e43-e104-4e9d-b146-1e5891166bbf",
+    "items": [
+      {
+        "name": "Erriez Pyside6",
+        "description": "MSI pakage for Erriez Pyside6",
+        "target": "[INSTALLDIR]\\pyside6-app.exe",
+        "wdir": "INSTALLDIR",
+        "arguments": "",
+        "icon": ""
+      }
+    ]
+  },
+  "choco": {
+    "description": "Generate MSI package for Erriez Pyside6 Example",
+    "project-url": "https://github.com/Erriez/pyside6-nuitka-deployment",
+    "tags": "Erriez Pyside6 Example",
+    "license-url": "https://github.com/Erriez/pyside6-nuitka-deployment/blob/master/LICENSE"
+  }
+}

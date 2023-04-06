@@ -41,6 +41,7 @@ $ pip install nuitka
 ```bash
 # Build executable for Linux
 $ python3 -m nuitka \
+    --output-dir=output \
     --output-file=pyside6-app \
     --onefile \
     --enable-plugin=pyside6 \
@@ -56,6 +57,7 @@ $ ./pyside6-app
 ```
 # Build executable for Windows
 $ python3 -m nuitka \
+    --output-dir=output \
     --output-file=pyside6-app.exe \
     --onefile \
     --enable-plugin=pyside6 \
