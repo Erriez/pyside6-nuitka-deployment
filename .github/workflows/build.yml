@@ -1,4 +1,4 @@
-name: Create PySide6 exe with Nuitka-Action
+name: Create PySide6 executables with Nuitka-Action
 
 on:
   push:
@@ -85,4 +85,27 @@ jobs:
           path: |
             build/pyside6-app
             build/pyside6-app.exe
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    if: contains(github.ref, '/tags/v')
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: ls -R
+
+      - name: Create release from tag 
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          prerelease: false
+          files: |
+            LICENSE
+            ${{ github.workspace }}/artifacts/Linux Build/pyside6-app
+            ${{ github.workspace }}/artifacts/Windows Build/pyside6-app.exe
 
