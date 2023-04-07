@@ -21,13 +21,16 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 # SOFTWARE.
 #
-# Source: https://github.com/Erriez/pyside6-getting-started
+# Source: https://github.com/Erriez/pyside6-nuitka-deployment
 #
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QTextEdit, QFileDialog
 from PySide6.QtGui import QAction, QIcon
 import os
 import sys
+import webbrowser
+
+APP_WEBSITE = "https://github.com/Erriez/pyside6-nuitka-deployment"
 
 # When packaged to a single file with PyInstaller, running the .exe will unpack
 # everything to a folder in your TEMP directory, run the script, then discard
@@ -68,6 +71,8 @@ class Window(QMainWindow):
         self.setCentralWidget(self.textEdit)
 
         # Create menubar
+        menubar = self.menuBar()
+
         file_open = QAction(QIcon(resource_path(r'images/open.png')), 'Open', self)
         file_open.setShortcut('Ctrl+O')
         file_open.setStatusTip('Open new File')
@@ -78,16 +83,25 @@ class Window(QMainWindow):
         file_exit.setStatusTip('Exit application')
         file_exit.triggered.connect(self.close)
 
-        menubar = self.menuBar()
         menu_file = menubar.addMenu('&File')
         menu_file.addAction(file_open)
         menu_file.addSeparator()
         menu_file.addAction(file_exit)
 
+        help_about = QAction(QIcon(resource_path(r'images/question.png')), '&About', self)
+        help_about.setShortcut('F1')
+        help_about.setStatusTip('Open develop website on Github')
+        help_about.triggered.connect(self.about)
+
+        menu_help = menubar.addMenu('&Help')
+        menu_help.addAction(help_about)
+
         # Create toolbar with Exit button
         self.toolbar = self.addToolBar('Exit')
         self.toolbar.addAction(file_open)
         self.toolbar.addAction(file_exit)
+        self.toolbar.addSeparator()
+        self.toolbar.addAction(help_about)
 
         # Create statusbar
         self.statusBar().showMessage('Click File | Open to read a file')
@@ -108,6 +122,9 @@ class Window(QMainWindow):
                     self.statusBar().showMessage('File {} opened'.format(path))
             except OSError as err:
                 self.statusBar().showMessage(err)
+
+    def about(self):
+        webbrowser.open(APP_WEBSITE)
 
 
 def main():
