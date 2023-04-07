@@ -1,13 +1,10 @@
-name: Create PySide6 executables with Nuitka-Action
+name: PySide6 application deployment
 
 on:
   push:
-    branches: [ master ]
-    tags:
-      - "v*"
+    branches: [master]
   pull_request:
-     branches:
-      - master
+    branches: [master]
 
 jobs:
   build-linux:
@@ -44,8 +41,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          python-version: '3.10'
+          architecture: 'x64'
           cache: 'pip'
           cache-dependency-path: |
             **/requirements*.txt
@@ -83,8 +80,8 @@ jobs:
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10' # Version range or exact version of a Python version to use, using SemVer's version range syntax
-          architecture: 'x64' # optional x64 or x86. Defaults to x64 if not specified
+          python-version: '3.10'
+          architecture: 'x64'
           cache: 'pip'
           cache-dependency-path: |
             **/requirements*.txt
