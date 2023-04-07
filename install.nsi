@@ -81,7 +81,7 @@ Section -MainProgram
 ${INSTALL_TYPE}
 SetOverwrite ifnewer
 SetOutPath "$INSTDIR"
-File "dist\erriez-pyside6-app.exe"
+File "erriez-pyside6-app.exe"
 File "LICENSE"
 SectionEnd
 

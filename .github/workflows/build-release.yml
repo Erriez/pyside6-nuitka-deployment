@@ -1,10 +1,12 @@
-name: PySide6 application deployment
+name: PySide6 application build and release
 
 on:
   push:
-    branches: [master]
+    branches: [ master ]
+    tags:
+      - 'v*.*.*'
   pull_request:
-    branches: [master]
+    branches: [ master ]
 
 jobs:
   build-linux:
@@ -56,7 +58,7 @@ jobs:
         uses: Nuitka/Nuitka-Action@main
         with:
           script-name: main.py
-          output-dir: dist
+          output-dir: .
           output-file: erriez-pyside6-app
           include-data-dir: images=images
           standalone: true
@@ -68,7 +70,9 @@ jobs:
         with:
           name: Linux Build
           if-no-files-found: error
-          path: dist/erriez-pyside6-app
+          path: |
+            LICENSE
+            erriez-pyside6-app
 
   build-windows:
     runs-on: windows-latest
@@ -94,7 +98,7 @@ jobs:
         uses: Nuitka/Nuitka-Action@main
         with:
           script-name: main.py
-          output-dir: dist
+          output-dir: .
           output-file: erriez-pyside6-app.exe
           include-data-dir: images=images
           standalone: true
@@ -112,4 +116,42 @@ jobs:
           name: Windows Build
           if-no-files-found: error
           path: |
+            LICENSE
+            erriez-pyside6-app.exe
             erriez-pyside6-app-setup.exe
+
+  release:
+    name: "Create Github release"
+    needs: [ build-linux, build-windows ]
+    runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/v')
+
+    steps:
+      - name: Check-out repository
+        uses: actions/checkout@v3
+
+      - name: Download and extract artifacts
+        uses: actions/download-artifact@v3
+        with:
+          path: artifacts
+
+      - name: Display structure of downloaded files
+        run: |
+          ls -R
+
+      - name: Add files to Github release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: |
+            LICENSE
+            ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app
+            ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app.exe
+            ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app-setup.exe
+
+      - name: Set GitHub release description
+        uses: Roang-zero1/github-create-release-action@v3
+        with:
+          update_existing: true
+          version_regex: ^v[[:digit:]]+\.[[:digit:]]+\.[[:digit:]]+
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
