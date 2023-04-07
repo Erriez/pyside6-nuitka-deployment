@@ -57,7 +57,7 @@ jobs:
         with:
           script-name: main.py
           output-dir: dist
-          output-file: pyside6-app
+          output-file: erriez-pyside6-app
           include-data-dir: images=images
           standalone: true
           onefile: true
@@ -68,7 +68,7 @@ jobs:
         with:
           name: Linux Build
           if-no-files-found: error
-          path: dist/pyside6-app
+          path: dist/erriez-pyside6-app
 
   build-windows:
     runs-on: windows-latest
@@ -95,7 +95,7 @@ jobs:
         with:
           script-name: main.py
           output-dir: dist
-          output-file: pyside6-app.exe
+          output-file: erriez-pyside6-app.exe
           include-data-dir: images=images
           standalone: true
           onefile: true
@@ -103,20 +103,8 @@ jobs:
           windows-icon-from-ico: images/app.ico
           enable-plugins: pyside6
 
-      - name: Install Windows go-msi
-        run: |
-          choco install -y "go-msi"
-          mkdir application
-          cp dist/pyside6-app.exe application/
-
-      - name: Build Windows MSI installer
-        uses: AliceOh/CreateWindowsInstaller@1.0.0
-        with:
-          exefile: 'pyside6-app.exe'
-
-      - name: Move Windows MSI
-        run: |
-          mv pyside6-app.exe.msi dist/pyside6-app.msi
+      - name: Create Windows NSIS installer
+        uses: joncloud/makensis-action@v4
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -124,5 +112,4 @@ jobs:
           name: Windows Build
           if-no-files-found: error
           path: |
-            dist/pyside6-app.exe
-            dist/pyside6-app.msi
+            erriez-pyside6-app-setup.exe
