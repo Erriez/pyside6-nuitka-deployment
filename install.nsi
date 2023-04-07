@@ -7,7 +7,7 @@
 !define APP_NAME "Erriez PySide6 App"
 !define COMP_NAME "Erriez Open Source Software"
 !define WEB_SITE "https://github.com/Erriez"
-!define VERSION "01.00.00.00"
+!define VERSION "01.00.02.00"
 !define COPYRIGHT "Erriez © 2023"
 !define DESCRIPTION "Application"
 !define LICENSE_TXT "LICENSE"

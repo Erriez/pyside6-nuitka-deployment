@@ -1,4 +1,4 @@
-[![Create PySide6 exe with Nuitka-Action](https://github.com/Erriez/pyside6-nuitka-deployment/actions/workflows/build.yml/badge.svg)](https://github.com/Erriez/pyside6-nuitka-deployment/actions/workflows/build.yml)
+[![PySide6 application build and release](https://github.com/Erriez/pyside6-nuitka-deployment/actions/workflows/build-release.yml/badge.svg)](https://github.com/Erriez/pyside6-nuitka-deployment/actions/workflows/build-release.yml)
 [![Licence MIT](https://img.shields.io/badge/license-MIT-green)](https://github.com/Erriez/pyside6-nuitka-deployment/blob/master/LICENSE)
 [![Pyside6](https://img.shields.io/badge/pyside6-v6.5.0-informational)](https://github.com/Erriez/pyside6-nuitka-deployment)
 [![Open issue](https://shields.io/github/issues-raw/Erriez/pyside6-nuitka-deployment)](https://github.com/Erriez/pyside6-nuitka-deployment/issues)
@@ -103,6 +103,14 @@ $ ./pyside6-app
 - Start `NSIS Quick Setup Script Generator.exe` and fill-in the wizard.
 - Copy generated file from `Output\App\*.nsi` to install.nsi and change to
 - relative path / customize.
+
+## Version numbering
+
+Manual version updates are required in:
+- `main.py` line `APP_VERSION`
+- `install.nsi` line `!define VERSION`
+- `CHANGELOG.md`
+- Git tag in format `vx.x.x`
 
 ## False positives virusscanners
 

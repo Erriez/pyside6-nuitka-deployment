@@ -24,13 +24,14 @@
 # Source: https://github.com/Erriez/pyside6-nuitka-deployment
 #
 
-from PySide6.QtWidgets import QApplication, QMainWindow, QTextEdit, QFileDialog
+from PySide6.QtWidgets import QApplication, QMainWindow, QTextEdit, QFileDialog, QMessageBox
 from PySide6.QtGui import QAction, QIcon
 import os
 import sys
 import webbrowser
 
-APP_WEBSITE = "https://github.com/Erriez/pyside6-nuitka-deployment"
+APP_WEBSITE = 'https://github.com/Erriez/pyside6-nuitka-deployment'
+APP_VERSION = '1.0.2'
 
 # When packaged to a single file with PyInstaller, running the .exe will unpack
 # everything to a folder in your TEMP directory, run the script, then discard
@@ -73,35 +74,42 @@ class Window(QMainWindow):
         # Create menubar
         menubar = self.menuBar()
 
-        file_open = QAction(QIcon(resource_path(r'images/open.png')), 'Open', self)
-        file_open.setShortcut('Ctrl+O')
-        file_open.setStatusTip('Open new File')
-        file_open.triggered.connect(self.show_dialog)
+        file_open_action = QAction(QIcon(resource_path(r'images/open.png')), 'Open', self)
+        file_open_action.setShortcut('Ctrl+O')
+        file_open_action.setStatusTip('Open new File')
+        file_open_action.triggered.connect(self.show_dialog)
 
-        file_exit = QAction(QIcon(resource_path(r'images/exit.png')), '&Exit', self)
-        file_exit.setShortcut('Ctrl+Q')
-        file_exit.setStatusTip('Exit application')
-        file_exit.triggered.connect(self.close)
+        file_exit_action = QAction(QIcon(resource_path(r'images/exit.png')), '&Exit', self)
+        file_exit_action.setShortcut('Ctrl+Q')
+        file_exit_action.setStatusTip('Exit application')
+        file_exit_action.triggered.connect(self.close)
 
         menu_file = menubar.addMenu('&File')
-        menu_file.addAction(file_open)
+        menu_file.addAction(file_open_action)
         menu_file.addSeparator()
-        menu_file.addAction(file_exit)
+        menu_file.addAction(file_exit_action)
 
-        help_about = QAction(QIcon(resource_path(r'images/question.png')), '&About', self)
-        help_about.setShortcut('F1')
-        help_about.setStatusTip('Open develop website on Github')
-        help_about.triggered.connect(self.about)
+        help_action = QAction(QIcon(resource_path(r'images/web.png')), '&Source on Github', self)
+        help_action.setShortcut('F1')
+        help_action.setStatusTip('Open Github project website')
+        help_action.triggered.connect(self.help)
+
+        about_action = QAction(QIcon(resource_path(r'images/question.png')), '&About', self)
+        about_action.setShortcut('Ctrl+?')
+        about_action.setStatusTip('About application')
+        about_action.triggered.connect(self.about)
 
         menu_help = menubar.addMenu('&Help')
-        menu_help.addAction(help_about)
+        menu_help.addAction(help_action)
+        menu_help.addSeparator()
+        menu_help.addAction(about_action)
 
         # Create toolbar with Exit button
         self.toolbar = self.addToolBar('Exit')
-        self.toolbar.addAction(file_open)
-        self.toolbar.addAction(file_exit)
+        self.toolbar.addAction(file_open_action)
+        self.toolbar.addAction(file_exit_action)
         self.toolbar.addSeparator()
-        self.toolbar.addAction(help_about)
+        self.toolbar.addAction(help_action)
 
         # Create statusbar
         self.statusBar().showMessage('Click File | Open to read a file')
@@ -123,8 +131,16 @@ class Window(QMainWindow):
             except OSError as err:
                 self.statusBar().showMessage(err)
 
-    def about(self):
+    def help(self):
         webbrowser.open(APP_WEBSITE)
+
+    def about(self, event):
+        QMessageBox.about(self,
+                          'About',
+                          'Application:  Pyside6 Example\n'
+                          f'Version:  v{APP_VERSION}\n'
+                          'Copyright:  © 2023 by Erriez\n'
+                          'License:  MIT')
 
 
 def main():
