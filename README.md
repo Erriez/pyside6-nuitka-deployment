@@ -98,22 +98,11 @@ $ ./pyside6-app
 ```
 
 ## Build Windows MSI manually
-```
-# Install choco and go-msi from PowerShell (Admin)
-> Set-ExecutionPolicy Bypass -Scope Process -Force; [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.ServicePointManager]::SecurityProtocol -bor 3072; iex ((New-Object System.Net.WebClient).DownloadString('https://community.chocolatey.org/install.ps1'))
-> choco install -y "go-msi"
-
-> Download and install Wix Toolset from: https://wixtoolset.org/docs/wix3/
-> Enable Windows feature .NET 3.5: https://github.com/wixtoolset/issues/issues/6824
-> $env:Path += ";C:\Program Files (x86)\WiX Toolset v3.11\bin"
-
-> Set path executable in `wix.json` as the `bin/*.exe` is hard-coded in AliceOh_CreateWindowsInstaller:
-https://github.com/actions-marketplace-validations/AliceOh_CreateWindowsInstaller/blob/4b2465d50f69dc6376ac9c9081750957b1ecbbec/index.js#L31
-
-> go-msi check-json
-> go-msi set-guid
-> go-msi make --msi dist\pyside6-app.msi --version 1.0.0
-```
+- Download [NSIS v3](https://nsis.sourceforge.io/Download)
+- Download [NSIS Quick Setup Script Generator](https://nsis.sourceforge.io/NSIS_Quick_Setup_Script_Generator)
+- Start `NSIS Quick Setup Script Generator.exe` and fill-in the wizard.
+- Copy generated file from `Output\App\*.nsi` to install.nsi and change to
+- relative path / customize.
 
 ## False positives virusscanners
 
@@ -125,7 +114,6 @@ known issue.
 
 This project is published under [MIT license](https://github.com/Erriez/pyside6-nuitka-deployment/blob/master/LICENSE)
 with an additional end user agreement (next section).
-
 
 ## End User Agreement :ukraine:
 
