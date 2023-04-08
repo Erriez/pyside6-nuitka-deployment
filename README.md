@@ -11,13 +11,30 @@ this repository.
 
 ![Pyside6 app screenshot](screenshots/app-screenshot.png)
 
-Qt recommends [Nuitka](https://doc.qt.io/qtforpython-6/deployment/deployment-nuitka.html) 
-or [Pyinstaller](https://pyinstaller.org/en/stable/) to create Pyside6 executables for Windows and Linux.
+Qt recommends [Nuitka](https://doc.qt.io/qtforpython-6/deployment/deployment-nuitka.html) or
+[Pyinstaller](https://pyinstaller.org/en/stable/) to create Pyside6 executables for deployment. Nuitka creates smaller
+executables compared with Pyinstaller, but Pyinstaller build is faster.
 
-## Download executables from Github Actions
+## Download executables created by Github Action
 
-Visit [Actions](https://github.com/Erriez/pyside6-nuitka-test/actions), open
+Download executables for Windows or Linux from:
+
+* [Github Releases](https://github.com/Erriez/pyside6-nuitka-deployment/releases) (Recommended), or:
+* [Github Actions (development)](https://github.com/Erriez/pyside6-nuitka-test/actions), open
 a build and download `Linux Build` or `Windows Build` under `Artifacts`.
+
+**On Linux:**
+```bash
+# Add executable flag after download with command:
+$ chmod +x erriez-pyside6-app
+ 
+# Start executable:
+$ ./erriez-pyside6-app
+```
+
+**On Windows:**:
+* Run `erriez-pyside6-app.exe` as portable standalone application, or:
+* Run `erriez-pyside6-app-setup.exe` to install on Windows which creates a shortcut in the start menu and desktop:
 
 ## Build executable manually
 
@@ -37,6 +54,8 @@ $ pip install nuitka
 ```
 
 ## Build executable on Ubuntu/Mint 22.04/22.10 Desktop manually
+
+Create single executable for Linux:
 
 ```bash
 # Build executable for Linux
