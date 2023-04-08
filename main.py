@@ -26,12 +26,17 @@
 
 from PySide6.QtWidgets import QApplication, QMainWindow, QTextEdit, QFileDialog, QMessageBox
 from PySide6.QtGui import QAction, QIcon
+import PySide6
 import os
 import sys
 import webbrowser
 
+APP_NAME = 'PySide6 Example'
 APP_WEBSITE = 'https://github.com/Erriez/pyside6-nuitka-deployment'
-APP_VERSION = '1.0.2'
+APP_DEVELOPER = 'Erriez'
+APP_VERSION = 'main'
+APP_YEAR = 2023
+APP_LICENSE = 'MIT'
 
 # When packaged to a single file with PyInstaller, running the .exe will unpack
 # everything to a folder in your TEMP directory, run the script, then discard
@@ -63,7 +68,7 @@ class Window(QMainWindow):
         # Resize window
         self.resize(400, 300)
         # Set window title
-        self.setWindowTitle('Pyside6 App')
+        self.setWindowTitle(APP_NAME)
         # Set window icon
         self.setWindowIcon(QIcon(resource_path(r'images/app.png')))
 
@@ -134,13 +139,15 @@ class Window(QMainWindow):
     def help(self):
         webbrowser.open(APP_WEBSITE)
 
-    def about(self, event):
-        QMessageBox.about(self,
-                          'About',
-                          'Application:  Pyside6 Example\n'
-                          f'Version:  v{APP_VERSION}\n'
-                          'Copyright:  © 2023 by Erriez\n'
-                          'License:  MIT')
+    def about(self, _):
+        title = 'About'
+        text = f'Application:  {APP_NAME}\n' \
+               f'Version:  {APP_VERSION}\n' \
+               f'Python:  v{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}\n' \
+               f'PySide:  v{PySide6.__version__}\n' \
+               f'Copyright:  © {APP_YEAR} by {APP_DEVELOPER}\n' \
+               f'License:  {APP_LICENSE}'
+        QMessageBox.about(self, title, text)
 
 
 def main():
