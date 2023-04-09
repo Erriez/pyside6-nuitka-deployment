@@ -34,7 +34,6 @@ import webbrowser
 APP_NAME = 'PySide6 Example'
 APP_WEBSITE = 'https://github.com/Erriez/pyside6-nuitka-deployment'
 APP_DEVELOPER = 'Erriez'
-APP_VERSION = 'main'
 APP_YEAR = 2023
 APP_LICENSE = 'MIT'
 
@@ -49,16 +48,28 @@ except:
     pass
 
 
-# Find images with Nuitka build option "--include-data-dir=images=images"
+# Find images with Nuitka build option "--include-data-dir=src=dst"
 def resource_path(filename):
     # Get the absolute path of the directory containing the executable
     exe_dir = os.path.dirname(os.path.abspath(__file__))
 
-    # Construct the path to the image file
-    image_path = os.path.join(exe_dir, filename)
+    # Construct the path to the dst file
+    dst_path = os.path.join(exe_dir, filename)
 
     # Return the image path
-    return image_path
+    return dst_path
+
+
+def get_app_version():
+    app_version = 'Unknown'
+    version_file = resource_path(r'data/version.txt')
+    if version_file:
+        try:
+            with open(version_file, 'r') as f:
+                app_version = f.readline()
+        except OSError:
+            pass
+    return app_version
 
 
 class Window(QMainWindow):
@@ -142,7 +153,7 @@ class Window(QMainWindow):
     def about(self, _):
         title = 'About'
         text = f'Application:  {APP_NAME}\n' \
-               f'Version:  {APP_VERSION}\n' \
+               f'Version:  {get_app_version()}\n' \
                f'Python:  v{sys.version_info[0]}.{sys.version_info[1]}.{sys.version_info[2]}\n' \
                f'PySide:  v{PySide6.__version__}\n' \
                f'Copyright:  © {APP_YEAR} by {APP_DEVELOPER}\n' \

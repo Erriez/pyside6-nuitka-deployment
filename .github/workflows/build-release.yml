@@ -2,11 +2,11 @@ name: PySide6 application build and release
 
 on:
   push:
-    branches: [ master ]
+    branches: [ master, staging/erriez/* ]
     tags:
       - 'v*.*.*'
   pull_request:
-    branches: [ master ]
+    branches: [ master, staging/erriez/* ]
 
 jobs:
   build-linux:
@@ -15,6 +15,13 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
+
+      - name: Get tag
+        id: tag
+        uses: Erriez/action-get-tag@v1.0.1
+        with:
+          strip_v: true # Remove v character from version
+          default: v0.0.0 # Default version when tag not found
 
       - name: Install Linux system dependencies
         run: |
@@ -53,6 +60,12 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Save version.txt
+        run: |
+          echo "v${{steps.tag.outputs.tag}}" > data/version.txt
+          echo "Contents data/version.txt:"
+          cat data/version.txt
+
       - name: Build Linux executable
         if: runner.os == 'Linux'
         uses: Nuitka/Nuitka-Action@main
@@ -60,7 +73,7 @@ jobs:
           script-name: main.py
           output-dir: .
           output-file: erriez-pyside6-app
-          include-data-dir: images=images
+          include-data-dir: images=images,data=data
           standalone: true
           onefile: true
           enable-plugins: pyside6
@@ -80,6 +93,13 @@ jobs:
     steps:
       - name: Check-out repository
         uses: actions/checkout@v3
+
+      - name: Get tag
+        id: tag
+        uses: Erriez/action-get-tag@v1.0.1
+        with:
+          strip_v: true # Remove v character from version
+          default: v0.0.0 # Default version when tag not found
       
       - name: Setup Python
         uses: actions/setup-python@v4
@@ -94,13 +114,19 @@ jobs:
         run: |
           pip install -r requirements.txt
 
+      - name: Save version.txt
+        run: |
+          echo "v${{steps.tag.outputs.tag}}" > data\version.txt
+          echo "Contents data\version.txt:"
+          more data\version.txt
+
       - name: Build Windows executable
         uses: Nuitka/Nuitka-Action@main
         with:
           script-name: main.py
           output-dir: .
           output-file: erriez-pyside6-app.exe
-          include-data-dir: images=images
+          include-data-dir: images=images,data=data
           standalone: true
           onefile: true
           disable-console: true
