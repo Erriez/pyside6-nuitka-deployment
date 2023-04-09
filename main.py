@@ -69,7 +69,7 @@ def get_app_version():
                 app_version = f.readline()
         except OSError:
             pass
-    return app_version
+    return app_version.strip()
 
 
 class Window(QMainWindow):
