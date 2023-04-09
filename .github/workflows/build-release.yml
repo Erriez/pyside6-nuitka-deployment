@@ -72,11 +72,16 @@ jobs:
         with:
           script-name: main.py
           output-dir: .
-          output-file: erriez-pyside6-app
+          output-file: erriez-pyside6-app-linux
           include-data-dir: images=images,data=data
           standalone: true
           onefile: true
           enable-plugins: pyside6
+
+      - name: Create executable hashes
+        run: |
+          sha1sum erriez-pyside6-app-linux > erriez-pyside6-app-linux.sha1
+          cat erriez-pyside6-app-linux.sha1
       
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
@@ -85,7 +90,8 @@ jobs:
           if-no-files-found: error
           path: |
             LICENSE
-            erriez-pyside6-app
+            erriez-pyside6-app-linux
+            erriez-pyside6-app-linux.sha1
 
   build-windows:
     runs-on: windows-latest
@@ -118,7 +124,7 @@ jobs:
         run: |
           echo "v${{steps.tag.outputs.tag}}" > data\version.txt
           echo "Contents data\version.txt:"
-          more data\version.txt
+          cat data\version.txt
 
       - name: Build Windows executable
         uses: Nuitka/Nuitka-Action@main
@@ -136,6 +142,13 @@ jobs:
       - name: Create Windows NSIS installer
         uses: joncloud/makensis-action@v4
 
+      - name: Create executable hashes
+        run: |
+          sha1sum erriez-pyside6-app.exe > erriez-pyside6-app.exe.sha1
+          sha1sum erriez-pyside6-app-setup.exe > erriez-pyside6-app-setup.exe.sha1
+          cat erriez-pyside6-app.exe.sha1
+          cat erriez-pyside6-app-setup.exe.sha1
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -144,7 +157,9 @@ jobs:
           path: |
             LICENSE
             erriez-pyside6-app.exe
+            erriez-pyside6-app.exe.sha1
             erriez-pyside6-app-setup.exe
+            erriez-pyside6-app-setup.exe.sha1
 
   release:
     name: "Create Github release"
@@ -170,9 +185,12 @@ jobs:
         with:
           files: |
             LICENSE
-            ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app
+            ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app-linux
+            ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app-linux.sha1
             ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app.exe
+            ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app.exe.sha1
             ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app-setup.exe
+            ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app-setup.exe.sha1
 
       - name: Set GitHub release description
         uses: Roang-zero1/github-create-release-action@v3

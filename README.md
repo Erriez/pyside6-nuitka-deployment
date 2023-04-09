@@ -61,14 +61,14 @@ Create single executable for Linux:
 # Build executable for Linux
 $ python3 -m nuitka \
     --output-dir=dist \
-    --output-file=pyside6-app \
+    --output-file=pyside6-app-linux \
     --onefile \
     --enable-plugin=pyside6 \
     --include-data-dir=images=images \
     main.py
 
 # Start created executable
-$ ./pyside6-app
+$ ./pyside6-app-linux
 ```
 
 ## Build executable on Windows 10/11 Desktop manually
