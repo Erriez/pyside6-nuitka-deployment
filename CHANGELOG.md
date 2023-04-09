@@ -1,5 +1,9 @@
 # Changelog
 
+## v1.0.3
+
+Add Git tag version
+
 ## v1.0.2
 
 Fix version setup and about dialog.

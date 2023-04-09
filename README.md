@@ -126,8 +126,6 @@ $ ./pyside6-app
 ## Version numbering
 
 Manual version updates are required in:
-- `main.py` line `APP_VERSION`
-- `install.nsi` line `!define VERSION`
 - `CHANGELOG.md`
 - Git tag in format `vx.x.x`
 
