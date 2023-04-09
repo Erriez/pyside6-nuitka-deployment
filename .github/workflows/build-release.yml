@@ -66,6 +66,12 @@ jobs:
           echo "Contents data/version.txt:"
           cat data/version.txt
 
+      - name: Save website.url
+        run: |
+          echo "[InternetShortcut]" > website.url
+          echo "URL=${{github.server_url}}/${{github.repository}}" >> website.url
+          cat website.url
+
       - name: Build Linux executable
         if: runner.os == 'Linux'
         uses: Nuitka/Nuitka-Action@main
@@ -90,6 +96,7 @@ jobs:
           if-no-files-found: error
           path: |
             LICENSE
+            website.url
             erriez-pyside6-app-linux
             erriez-pyside6-app-linux.sha1
 
@@ -126,6 +133,12 @@ jobs:
           echo "Contents data\version.txt:"
           cat data\version.txt
 
+      - name: Save website.url
+        run: |
+          echo "[InternetShortcut]" > website.url
+          echo "URL=${{github.server_url}}/${{github.repository}}" >> website.url
+          cat website.url
+
       - name: Build Windows executable
         uses: Nuitka/Nuitka-Action@main
         with:
@@ -156,6 +169,7 @@ jobs:
           if-no-files-found: error
           path: |
             LICENSE
+            website.url
             erriez-pyside6-app.exe
             erriez-pyside6-app.exe.sha1
             erriez-pyside6-app-setup.exe
