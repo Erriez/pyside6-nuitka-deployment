@@ -27,6 +27,7 @@
 from PySide6.QtWidgets import QApplication, QMainWindow, QTextEdit, QFileDialog, QMessageBox
 from PySide6.QtGui import QAction, QIcon
 import PySide6
+import argparse
 import os
 import sys
 import webbrowser
@@ -162,10 +163,21 @@ class Window(QMainWindow):
 
 
 def main():
-    app = QApplication(sys.argv)
-    window = Window()
-    window.show()
-    sys.exit(app.exec())
+    print(f'{APP_NAME}')
+    # Argument parser
+    parser = argparse.ArgumentParser()
+
+    parser.add_argument('-v', '--version', help='Print version commandline', action="store_true")
+
+    args = parser.parse_args()
+
+    if args.version:
+        print(f'Version: {get_app_version()}')
+    else:
+        app = QApplication(sys.argv)
+        window = Window()
+        window.show()
+        sys.exit(app.exec())
 
 
 if __name__ == '__main__':
