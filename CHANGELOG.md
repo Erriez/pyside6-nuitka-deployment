@@ -2,9 +2,9 @@
 
 ## v1.0.4
 
-Add Linux installer.
-Add SHA1 file checksums.
-Add argument parser.
+* Add Linux installer.
+* Add SHA1 file checksums.
+* Add argument parser.
 
 ## v1.0.3
 

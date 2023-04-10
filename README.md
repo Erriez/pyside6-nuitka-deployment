@@ -142,8 +142,7 @@ $ ./pyside6-app-linux
 - Download [NSIS v3](https://nsis.sourceforge.io/Download).
 - Download [NSIS Quick Setup Script Generator](https://nsis.sourceforge.io/NSIS_Quick_Setup_Script_Generator).
 - Start `NSIS Quick Setup Script Generator.exe` and fill-in the wizard.
-- Copy generated file from `Output\App\*.nsi` to install.nsi and change to
-- relative path / customize.
+- Copy generated file from `Output\App\*.nsi` to install.nsi and change to relative path / customize file.
 
 ## Version numbering
 
