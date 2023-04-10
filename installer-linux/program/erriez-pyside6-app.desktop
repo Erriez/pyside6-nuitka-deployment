@@ -1,0 +1,11 @@
+[Desktop Entry]
+Type=Application
+Name=Erriez Pyside6 App
+GenericName=Erriez Pyside6 App
+Comment=A PySide6 example application created by Erriez
+Icon=
+Exec=
+Categories=PySide6;Utility;
+Keywords=Erriez;PySide6;
+Terminal=false
+MimeType=application/erriez-pyside6-app;

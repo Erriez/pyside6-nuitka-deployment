@@ -1,8 +1,14 @@
 # Changelog
 
+## v1.0.4
+
+Add Linux installer.
+Add SHA1 file checksums.
+Add argument parser.
+
 ## v1.0.3
 
-Add Git tag version
+Add Git tag version.
 
 ## v1.0.2
 

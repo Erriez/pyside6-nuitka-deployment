@@ -23,7 +23,28 @@ Download executables for Windows or Linux from:
 * [Github Actions (development)](https://github.com/Erriez/pyside6-nuitka-test/actions), open
 a build and download `Linux Build` or `Windows Build` under `Artifacts`.
 
-**On Linux:**
+**Linux installer:**
+
+No `sudo` rights are required as the executable is installed in the user's home directory `~/.local/bin/erriez/`:
+
+```bash
+# Add executable flag after download with command:
+$ chmod +x erriez-pyside6-app-linux-setup.run
+ 
+# Run setup:
+$ ./erriez-pyside6-app-linux-setup.run
+
+Press `q` to quit license.
+Please type y to accept, n otherwise: y
+...
+```
+
+Start the application via desktop menu | Accessories.
+
+**Linux standalone application:**
+
+The Linux standalone executable can be started directly without `sudo` or installation:
+
 ```bash
 # Add executable flag after download with command:
 $ chmod +x erriez-pyside6-app
@@ -32,9 +53,10 @@ $ chmod +x erriez-pyside6-app
 $ ./erriez-pyside6-app
 ```
 
-**On Windows:**:
+**Windows:**:
 * Run `erriez-pyside6-app.exe` as portable standalone application, or:
-* Run `erriez-pyside6-app-setup.exe` to install on Windows which creates a shortcut in the start menu and desktop:
+* Run `erriez-pyside6-app-setup.exe` to install on Windows (default: `C:\Program Files\Erriez\`) which creates a
+  shortcut in the start menu and desktop:
 
 ## Build executable manually
 
@@ -117,8 +139,8 @@ $ ./pyside6-app-linux
 ```
 
 ## Build Windows MSI manually
-- Download [NSIS v3](https://nsis.sourceforge.io/Download)
-- Download [NSIS Quick Setup Script Generator](https://nsis.sourceforge.io/NSIS_Quick_Setup_Script_Generator)
+- Download [NSIS v3](https://nsis.sourceforge.io/Download).
+- Download [NSIS Quick Setup Script Generator](https://nsis.sourceforge.io/NSIS_Quick_Setup_Script_Generator).
 - Start `NSIS Quick Setup Script Generator.exe` and fill-in the wizard.
 - Copy generated file from `Output\App\*.nsi` to install.nsi and change to
 - relative path / customize.

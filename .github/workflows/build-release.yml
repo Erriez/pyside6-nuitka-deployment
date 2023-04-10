@@ -62,7 +62,7 @@ jobs:
 
       - name: Save version.txt
         run: |
-          echo "v${{steps.tag.outputs.tag}}" > data/version.txt
+          echo "${{steps.tag.outputs.tag}}" > data/version.txt
           echo "Contents data/version.txt:"
           cat data/version.txt
 
@@ -84,11 +84,31 @@ jobs:
           onefile: true
           enable-plugins: pyside6
 
+      - name: Create Linux installer
+        run: |
+          # Install Linux system dependencies
+          sudo apt install makeself
+          
+          # Copy executable to installer directory
+          cp erriez-pyside6-app-linux installer-linux/program/erriez-pyside6-app
+
+          # Create Linux installer
+          OUTPUT_FILE=erriez-pyside6-app-linux-setup.run
+          installer-linux/create_linux_installer.sh ${OUTPUT_FILE}
+
+          # Check if file exists
+          if [ ! -f "$OUTPUT_FILE" ]; then
+            echo "OUTPUT_FILE does not exist."
+            exit 1
+          fi
+
       - name: Create executable hashes
         run: |
           sha1sum erriez-pyside6-app-linux > erriez-pyside6-app-linux.sha1
+          sha1sum erriez-pyside6-app-linux-setup.run > erriez-pyside6-app-linux-setup.run.sha1
           cat erriez-pyside6-app-linux.sha1
-      
+          cat erriez-pyside6-app-linux-setup.run.sha1
+
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
         with:
@@ -99,6 +119,8 @@ jobs:
             website.url
             erriez-pyside6-app-linux
             erriez-pyside6-app-linux.sha1
+            erriez-pyside6-app-linux-setup.run
+            erriez-pyside6-app-linux-setup.run.sha1
 
   build-windows:
     runs-on: windows-latest
@@ -112,8 +134,8 @@ jobs:
         uses: Erriez/action-get-tag@v1.0.1
         with:
           strip_v: true # Remove v character from version
-          default: v0.0.0 # Default version when tag not found
-      
+          default: 0.0.0 # Default version when tag not found
+
       - name: Setup Python
         uses: actions/setup-python@v4
         with:
@@ -129,7 +151,7 @@ jobs:
 
       - name: Save version.txt
         run: |
-          echo "v${{steps.tag.outputs.tag}}" > data\version.txt
+          echo "${{steps.tag.outputs.tag}}" > data\version.txt
           echo "Contents data\version.txt:"
           cat data\version.txt
 
@@ -154,6 +176,9 @@ jobs:
 
       - name: Create Windows NSIS installer
         uses: joncloud/makensis-action@v4
+        with:
+          script-file: "install.nsi"
+          arguments: "/V4 /DVERSION=${{steps.tag.outputs.tag}}"
 
       - name: Create executable hashes
         run: |
@@ -201,6 +226,8 @@ jobs:
             LICENSE
             ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app-linux
             ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app-linux.sha1
+            ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app-linux-setup.run
+            ${{ github.workspace }}/artifacts/Linux Build/erriez-pyside6-app-linux-setup.run.sha1
             ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app.exe
             ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app.exe.sha1
             ${{ github.workspace }}/artifacts/Windows Build/erriez-pyside6-app-setup.exe
